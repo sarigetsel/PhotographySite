@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CheckCircle, Loader2, Mail, MessageCircle, Phone, Share2 } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
@@ -20,7 +20,7 @@ const CONTACT_LINKS = [
   {
     icon: Mail,
     label: 'Email',
-    href: `mailto:${BRAND.email}`,
+    href: `mailto:${BRAND.email}?subject=${encodeURIComponent('פנייה מהאתר — Rut Getsel Photography')}`,
     sub: BRAND.email,
   },
   {
@@ -36,23 +36,11 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
   const [status, setStatus] = useState('idle')
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('sent') === '1') {
-      setStatus('success')
-      window.history.replaceState({}, '', `${window.location.pathname}#contact`)
-    }
-  }, [])
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (!WEB3FORMS_ACCESS_KEY) {
-      const subject = encodeURIComponent('פנייה מהאתר — Rut Getsel Photography')
-      const body = encodeURIComponent(
-        `שם: ${form.name}\nאימייל: ${form.email}\nטלפון: ${form.phone}\n\n${form.message}`,
-      )
-      window.location.href = `mailto:${BRAND.email}?subject=${subject}&body=${body}`
+      setStatus('error')
       return
     }
 
@@ -73,6 +61,7 @@ export default function Contact() {
           email: form.email,
           phone: form.phone,
           message: form.message,
+          botcheck: false,
         }),
       })
 
@@ -82,6 +71,7 @@ export default function Contact() {
         setStatus('success')
         setForm({ name: '', email: '', phone: '', message: '' })
       } else {
+        console.error('Web3Forms error:', data)
         setStatus('error')
       }
     } catch {
@@ -90,7 +80,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="bg-brand-sage/30 py-24 md:py-32">
+    <section id="contact" className="relative z-10 bg-brand-sage/30 py-24 md:py-32">
       <div ref={ref} className="mx-auto max-w-6xl px-6 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -122,7 +112,7 @@ export default function Contact() {
                 href={item.href}
                 target={item.href.startsWith('http') ? '_blank' : undefined}
                 rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="group flex flex-col items-center rounded-2xl border border-brand-sage bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-brand-coral/40 hover:shadow-lg"
+                className="group relative z-20 flex cursor-pointer flex-col items-center rounded-2xl border border-brand-sage bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-brand-coral/40 hover:shadow-lg"
               >
                 <div className="mb-3 rounded-full bg-brand-antique-pink/70 p-3 text-brand-dark transition-colors group-hover:bg-brand-coral group-hover:text-white">
                   <item.icon size={22} strokeWidth={1.5} />
@@ -138,7 +128,7 @@ export default function Contact() {
             initial={{ opacity: 0, x: 20 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="space-y-5 rounded-2xl border border-brand-sage bg-white p-8 shadow-sm"
+            className="relative z-20 space-y-5 rounded-2xl border border-brand-sage bg-white p-8 shadow-sm"
           >
             <div>
               <label htmlFor="name" className="mb-1.5 block text-sm text-brand-dark/70">
@@ -151,7 +141,7 @@ export default function Contact() {
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full rounded-xl border border-brand-sage bg-brand-light/50 px-4 py-3 text-brand-dark outline-none transition-colors focus:border-brand-coral focus:bg-white"
+                className="w-full cursor-text rounded-xl border border-brand-sage bg-brand-light/50 px-4 py-3 text-brand-dark outline-none transition-colors focus:border-brand-coral focus:bg-white"
               />
             </div>
             <div className="grid gap-5 sm:grid-cols-2">
@@ -166,7 +156,7 @@ export default function Contact() {
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full rounded-xl border border-brand-sage bg-brand-light/50 px-4 py-3 text-brand-dark outline-none transition-colors focus:border-brand-coral focus:bg-white"
+                  className="w-full cursor-text rounded-xl border border-brand-sage bg-brand-light/50 px-4 py-3 text-brand-dark outline-none transition-colors focus:border-brand-coral focus:bg-white"
                 />
               </div>
               <div>
@@ -179,7 +169,7 @@ export default function Contact() {
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="w-full rounded-xl border border-brand-sage bg-brand-light/50 px-4 py-3 text-brand-dark outline-none transition-colors focus:border-brand-coral focus:bg-white"
+                  className="w-full cursor-text rounded-xl border border-brand-sage bg-brand-light/50 px-4 py-3 text-brand-dark outline-none transition-colors focus:border-brand-coral focus:bg-white"
                 />
               </div>
             </div>
@@ -195,7 +185,7 @@ export default function Contact() {
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 placeholder="ספרו לי על הסשן שחלמתם עליו..."
-                className="w-full resize-none rounded-xl border border-brand-sage bg-brand-light/50 px-4 py-3 text-brand-dark outline-none transition-colors focus:border-brand-coral focus:bg-white"
+                className="w-full cursor-text resize-none rounded-xl border border-brand-sage bg-brand-light/50 px-4 py-3 text-brand-dark outline-none transition-colors focus:border-brand-coral focus:bg-white"
               />
             </div>
 
@@ -207,14 +197,16 @@ export default function Contact() {
             )}
             {status === 'error' && (
               <p className="text-sm text-red-600">
-                משהו השתבש. נסו שוב או שלחו מייל ישירות ל-{BRAND.email}
+                {!WEB3FORMS_ACCESS_KEY
+                  ? 'הטופס עדיין לא הופעל. צרי קובץ .env עם המפתח מ-web3forms.com (ראי הוראות למטה).'
+                  : `משהו השתבש. נסו שוב או שלחו מייל ישירות ל-${BRAND.email}`}
               </p>
             )}
 
             <button
               type="submit"
               disabled={status === 'sending'}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-coral disabled:opacity-60"
+              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-coral disabled:opacity-60"
             >
               {status === 'sending' ? (
                 <>

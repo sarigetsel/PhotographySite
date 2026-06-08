@@ -10,5 +10,4 @@ export const BRAND = {
 export const QUOTE =
   'אני לא יוצרת רגעים — רק שומרת עליהם לפני שהם נעלמים'
 
-/** Get free key at https://web3forms.com — enter the email above */
 export const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || ''

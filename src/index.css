@@ -28,9 +28,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body.custom-cursor,
-body.custom-cursor * {
-  cursor: none !important;
+body.custom-cursor {
+  cursor: none;
+}
+
+body.custom-cursor a,
+body.custom-cursor button,
+body.custom-cursor input,
+body.custom-cursor textarea,
+body.custom-cursor select,
+body.custom-cursor label {
+  cursor: pointer !important;
 }
 
 .font-serif {

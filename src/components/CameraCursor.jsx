@@ -48,7 +48,7 @@ export default function CameraCursor() {
     <>
       <motion.div
         className="pointer-events-none fixed top-0 left-0 z-[9999] -translate-x-1/2 -translate-y-1/2"
-        style={{ x, y }}
+        style={{ x, y, pointerEvents: 'none' }}
       >
         <motion.div
           animate={{ scale: clicking ? 0.85 : 1 }}
@@ -59,7 +59,7 @@ export default function CameraCursor() {
       </motion.div>
       <motion.div
         className="pointer-events-none fixed top-0 left-0 z-[9998] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-coral"
-        style={{ x, y }}
+        style={{ x, y, pointerEvents: 'none' }}
         animate={{ scale: clicking ? 1.8 : 1, opacity: clicking ? 0.5 : 0.9 }}
       />
     </>
