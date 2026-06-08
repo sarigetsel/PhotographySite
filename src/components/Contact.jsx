@@ -80,7 +80,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="relative z-10 bg-brand-sage/30 py-24 md:py-32">
+    <section id="contact" className="relative isolate z-30 bg-brand-sage/30 py-24 md:py-32">
       <div ref={ref} className="mx-auto max-w-6xl px-6 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -123,12 +123,15 @@ export default function Contact() {
             ))}
           </motion.div>
 
-          <motion.form
-            onSubmit={handleSubmit}
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative z-20 space-y-5 rounded-2xl border border-brand-sage bg-white p-8 shadow-sm"
+            className="relative z-20"
+          >
+          <form
+            onSubmit={handleSubmit}
+            className="relative space-y-5 rounded-2xl border border-brand-sage bg-white p-8 shadow-sm"
           >
             <div>
               <label htmlFor="name" className="mb-1.5 block text-sm text-brand-dark/70">
@@ -197,16 +200,14 @@ export default function Contact() {
             )}
             {status === 'error' && (
               <p className="text-sm text-red-600">
-                {!WEB3FORMS_ACCESS_KEY
-                  ? 'הטופס עדיין לא הופעל. צרי קובץ .env עם המפתח מ-web3forms.com (ראי הוראות למטה).'
-                  : `משהו השתבש. נסו שוב או שלחו מייל ישירות ל-${BRAND.email}`}
+                משהו השתבש. נסו שוב או שלחו מייל ישירות ל-{BRAND.email}
               </p>
             )}
 
             <button
               type="submit"
               disabled={status === 'sending'}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-coral disabled:opacity-60"
+              className="relative z-10 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-coral disabled:cursor-not-allowed disabled:opacity-60"
             >
               {status === 'sending' ? (
                 <>
@@ -221,7 +222,8 @@ export default function Contact() {
             <p className="text-center text-xs text-brand-dark/45">
               ההודעה נשלחת ישירות ל-{BRAND.email}
             </p>
-          </motion.form>
+          </form>
+          </motion.div>
         </div>
       </div>
     </section>

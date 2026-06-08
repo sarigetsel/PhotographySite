@@ -13,7 +13,6 @@ export default function CameraCursor() {
     const isTouch = window.matchMedia('(pointer: coarse)').matches
     if (isTouch) return
 
-    document.body.classList.add('custom-cursor')
     setVisible(true)
 
     const move = (e) => {
@@ -33,7 +32,6 @@ export default function CameraCursor() {
     document.body.addEventListener('mouseenter', enter)
 
     return () => {
-      document.body.classList.remove('custom-cursor')
       window.removeEventListener('mousemove', move)
       window.removeEventListener('mousedown', down)
       window.removeEventListener('mouseup', up)
