@@ -26,12 +26,12 @@ export default function Pricing({ onNavigate }) {
   const downloadPrice = () => {
     const link = document.createElement('a')
     link.href = PRICE_PATHS[0]
-    link.download = 'price-list'
+    link.download = 'rut-getsel-price-list'
     link.click()
   }
 
   return (
-    <section id="pricing" className="bg-stone-100 py-24 md:py-32">
+    <section id="pricing" className="bg-brand-sage/50 py-24 md:py-32">
       <div ref={ref} className="mx-auto max-w-5xl px-6 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -39,14 +39,14 @@ export default function Pricing({ onNavigate }) {
           transition={{ duration: 0.8 }}
           className="mb-16 text-center"
         >
-          <p className="mb-3 text-sm font-medium uppercase tracking-[0.3em] text-stone-400">
+          <p className="mb-3 text-sm font-medium tracking-[0.3em] text-brand-coral uppercase">
             Packages
           </p>
-          <h2 className="font-serif text-4xl font-light text-stone-800 md:text-5xl">
-            מחירון וחבילות
+          <h2 className="font-serif text-4xl font-light text-brand-dark md:text-5xl">
+            מחירון 2026
           </h2>
-          <p className="mx-auto mt-4 max-w-lg text-stone-500">
-            חבילות גמישות לכל סוג של סשן — מיום הולדת ועד צילומי הריון ומשפחה
+          <p className="mx-auto mt-4 max-w-lg text-brand-dark/70">
+            חבילות גמישות — מיני, מאסטר ופרימיום. לכל סוג של סשן, בטבע ובאור טבעי
           </p>
         </motion.div>
 
@@ -56,15 +56,15 @@ export default function Pricing({ onNavigate }) {
           transition={{ duration: 0.8, delay: 0.15 }}
           className="group relative mx-auto max-w-2xl"
         >
-          <div className="overflow-hidden rounded-2xl border border-stone-200/80 bg-white p-3 shadow-xl shadow-stone-300/30 transition-shadow duration-500 group-hover:shadow-2xl">
+          <div className="overflow-hidden rounded-2xl border-2 border-brand-dark/10 bg-white p-3 shadow-2xl shadow-brand-dark/10 transition-shadow duration-500 group-hover:shadow-brand-coral/20">
             <button
               type="button"
               onClick={() => setModalOpen(true)}
               className="relative block w-full overflow-hidden rounded-xl"
             >
               <PriceImage className="w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]" />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-500 group-hover:bg-black/20 group-hover:opacity-100">
-                <span className="flex items-center gap-2 rounded-full bg-white/90 px-5 py-2.5 text-sm font-medium text-stone-800 backdrop-blur-sm">
+              <div className="absolute inset-0 flex items-center justify-center bg-brand-dark/0 opacity-0 transition-all duration-500 group-hover:bg-brand-dark/25 group-hover:opacity-100">
+                <span className="flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-medium text-brand-dark backdrop-blur-sm">
                   <Maximize2 size={16} />
                   הגדלה
                 </span>
@@ -76,7 +76,7 @@ export default function Pricing({ onNavigate }) {
             <button
               type="button"
               onClick={downloadPrice}
-              className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-8 py-3 text-sm font-medium text-stone-700 transition-all hover:border-stone-800 hover:bg-stone-800 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-brand-dark bg-white px-8 py-3 text-sm font-medium text-brand-dark transition-all hover:bg-brand-dark hover:text-white"
             >
               <Download size={16} />
               הורדת מחירון
@@ -84,7 +84,7 @@ export default function Pricing({ onNavigate }) {
             <button
               type="button"
               onClick={() => onNavigate('contact')}
-              className="inline-flex items-center gap-2 rounded-full bg-stone-800 px-8 py-3 text-sm font-medium text-white transition-all hover:bg-stone-700"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-8 py-3 text-sm font-medium text-white shadow-lg shadow-brand-coral/25 transition-all hover:bg-brand-coral/90"
             >
               שאלו אותי
             </button>
@@ -98,13 +98,13 @@ export default function Pricing({ onNavigate }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-brand-navy/95 p-4 backdrop-blur-sm"
             onClick={() => setModalOpen(false)}
           >
             <button
               type="button"
               onClick={() => setModalOpen(false)}
-              className="absolute right-4 top-4 text-white/70 hover:text-white md:right-8 md:top-8"
+              className="absolute top-4 right-4 text-white/70 hover:text-white md:top-8 md:right-8"
               aria-label="סגור"
             >
               <X size={28} />

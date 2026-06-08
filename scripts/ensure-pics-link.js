@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, symlinkSync, mkdirSync } from 'fs'
+import { existsSync, symlinkSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
