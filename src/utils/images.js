@@ -19,6 +19,6 @@ export function getAllPicPaths() {
 
 export const LOGO_PATH = asset('pics/logo.png')
 
-export const PRICE_PATHS = [asset('pics/price.png'), asset('pics/price.jpg')]
+export const PRICE_PATHS = [asset('pics/price.jpg'), asset('pics/price.png')]
 
 export const HERO_SLIDES = [1, 12, 24, 36, 48, 60, 72, 84, 96, 108].map(getPicPath)

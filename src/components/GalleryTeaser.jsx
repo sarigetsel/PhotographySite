@@ -35,7 +35,7 @@ export default function GalleryTeaser() {
   const photos = PREVIEW.map((n) => getPicPath(n))
 
   return (
-    <section className="overflow-hidden bg-brand-antique-pink py-24 md:py-32">
+    <section className="overflow-hidden bg-brand-price-bg py-24 md:py-32">
       <div ref={ref} className="mx-auto max-w-7xl px-6 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -55,8 +55,8 @@ export default function GalleryTeaser() {
         </motion.div>
 
         <div className="relative mb-14" dir="ltr">
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-brand-antique-pink to-transparent md:w-24" />
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-brand-antique-pink to-transparent md:w-24" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-brand-price-bg to-transparent md:w-24" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-brand-price-bg to-transparent md:w-24" />
 
           <div className="overflow-hidden py-2">
             <div className="marquee-track flex w-max items-center">

@@ -6,7 +6,7 @@ export default function QuoteSection() {
   const [ref, inView] = useInView()
 
   return (
-    <section className="bg-brand-antique-pink py-20 md:py-28">
+    <section className="bg-brand-price-bg py-20 md:py-28">
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 40 }}

@@ -1,0 +1,14 @@
+---
+description: Rut Getsel photography site — Hebrew RTL, GitHub Pages, brand colors
+alwaysApply: true
+---
+
+# Photography Site
+
+- Hebrew RTL portfolio for Rut Getsel Photography
+- Deploy: push `main` → GitHub Actions → `gh-pages` at `/PhotographySite/`
+- Images live in `pics/`; paths via `src/utils/images.js` with URL encoding
+- Pink/cream section backgrounds use `bg-brand-price-bg` (#f2f0ed from price list), not `bg-brand-antique-pink`
+- Gallery marquee: never `loading="lazy"` on animated rows
+- Web3Forms key is in `Contact.jsx`; do not require `.env` for production
+- Commit and push when user asks; never commit `.env` or secrets
