@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CheckCircle, Loader2, Mail, MessageCircle, Phone, Share2 } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
-import { BRAND, WEB3FORMS_ACCESS_KEY } from '../utils/config'
+import { BRAND } from '../utils/config'
+
+const WEB3FORMS_ACCESS_KEY = 'c4cb3f93-8340-4068-b56a-2da211721129'
 
 const CONTACT_LINKS = [
   {
@@ -38,12 +40,6 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    if (!WEB3FORMS_ACCESS_KEY) {
-      setStatus('error')
-      return
-    }
-
     setStatus('sending')
 
     try {
@@ -61,7 +57,6 @@ export default function Contact() {
           email: form.email,
           phone: form.phone,
           message: form.message,
-          botcheck: false,
         }),
       })
 
@@ -133,6 +128,8 @@ export default function Contact() {
             onSubmit={handleSubmit}
             className="relative space-y-5 rounded-2xl border border-brand-sage bg-white p-8 shadow-sm"
           >
+            <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+            <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
             <div>
               <label htmlFor="name" className="mb-1.5 block text-sm text-brand-dark/70">
                 שם מלא
