@@ -6,15 +6,21 @@ import { useInView } from '../hooks/useInView'
 
 function PriceImage({ className }) {
   const [srcIndex, setSrcIndex] = useState(0)
+  const [loaded, setLoaded] = useState(false)
 
   return (
     <img
       src={PRICE_PATHS[srcIndex]}
       alt="מחירון צילום"
-      className={className}
+      loading="eager"
+      fetchPriority="high"
+      decoding="async"
+      onLoad={() => setLoaded(true)}
       onError={() => {
+        setLoaded(false)
         if (srcIndex < PRICE_PATHS.length - 1) setSrcIndex(srcIndex + 1)
       }}
+      className={`${className} ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}
     />
   )
 }
@@ -60,7 +66,7 @@ export default function Pricing({ onNavigate }) {
             <button
               type="button"
               onClick={() => setModalOpen(true)}
-              className="relative block w-full overflow-hidden rounded-xl"
+              className="relative block min-h-[420px] w-full overflow-hidden rounded-xl bg-brand-light/50 md:min-h-[520px]"
             >
               <PriceImage className="w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]" />
               <div className="absolute inset-0 flex items-center justify-center bg-brand-dark/0 opacity-0 transition-all duration-500 group-hover:bg-brand-dark/25 group-hover:opacity-100">

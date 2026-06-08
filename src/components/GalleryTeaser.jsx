@@ -12,7 +12,7 @@ function PhotoCard({ src, index }) {
       <img
         src={src}
         alt={`תצוגה ${index + 1}`}
-        loading="lazy"
+        loading="eager"
         decoding="async"
         className="max-h-full max-w-full rounded-md object-contain shadow-sm"
       />

@@ -2,7 +2,11 @@ const PIC_COUNT = 124
 const BASE = import.meta.env.BASE_URL
 
 function asset(path) {
-  return `${BASE}${path}`
+  const encoded = path
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')
+  return `${BASE}${encoded}`
 }
 
 export function getPicPath(index) {
