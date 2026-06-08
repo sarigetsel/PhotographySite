@@ -1,4 +1,4 @@
-import { existsSync, symlinkSync, mkdirSync } from 'fs'
+import { copyFileSync, cpSync, existsSync, lstatSync, mkdirSync, symlinkSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -18,9 +18,10 @@ if (existsSync(picsLink)) {
 mkdirSync(join(root, 'public'), { recursive: true })
 
 try {
-  symlinkSync(picsSrc, picsLink, 'junction')
-  console.log('Created public/pics → pics junction')
-} catch (err) {
-  console.warn('Could not create junction:', err.message)
-  console.warn('Run: mklink /J public\\pics pics')
+  const linkType = process.platform === 'win32' ? 'junction' : 'dir'
+  symlinkSync(picsSrc, picsLink, linkType)
+  console.log('Created public/pics → pics link')
+} catch {
+  cpSync(picsSrc, picsLink, { recursive: true })
+  console.log('Copied pics/ to public/pics/')
 }

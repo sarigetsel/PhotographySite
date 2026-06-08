@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowLeft, Images } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { HERO_SLIDES, LOGO_PATH } from '../utils/images'
+import { HERO_SLIDES } from '../utils/images'
 
 export default function Hero({ onNavigate }) {
   const [current, setCurrent] = useState(0)
@@ -44,22 +44,20 @@ export default function Hero({ onNavigate }) {
 
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-white"
+        className="relative z-10 flex h-full flex-col items-center justify-center px-6 pt-16 text-center text-white md:pt-20"
       >
-        <motion.img
-          src={LOGO_PATH}
-          alt="Rut Getsel Photography"
-          initial={{ opacity: 0, scale: 0.85, y: 30 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="animate-float mb-6 h-28 w-auto object-contain drop-shadow-2xl md:h-36 lg:h-44"
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="mb-8 h-px w-16 bg-brand-antique-pink/80"
         />
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="mb-3 text-xs font-light tracking-[0.4em] text-brand-antique-pink/90 uppercase md:text-sm"
+          transition={{ duration: 0.8, delay: 0.35 }}
+          className="mb-4 text-xs font-light tracking-[0.45em] text-brand-antique-pink/90 uppercase md:text-sm"
         >
           Lifestyle · Family · Children
         </motion.p>
@@ -67,7 +65,7 @@ export default function Hero({ onNavigate }) {
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.65 }}
+          transition={{ duration: 0.9, delay: 0.5 }}
           className="mb-5 max-w-4xl font-serif text-4xl leading-tight font-light md:text-6xl lg:text-7xl"
         >
           רגעים אמיתיים,
@@ -78,7 +76,7 @@ export default function Hero({ onNavigate }) {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.65 }}
           className="mb-10 max-w-xl text-base leading-relaxed font-light text-white/90 md:text-lg"
         >
           צילום משפחות וילדים בטבע — חם, טבעי ומלא אהבה
@@ -87,7 +85,7 @@ export default function Hero({ onNavigate }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.95 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
           className="flex flex-col items-center gap-4 sm:flex-row"
         >
           <motion.button

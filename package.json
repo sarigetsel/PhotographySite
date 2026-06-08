@@ -8,6 +8,7 @@
     "prebuild": "node scripts/ensure-pics-link.js",
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "node scripts/copy-404.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },

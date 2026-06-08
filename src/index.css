@@ -8,8 +8,8 @@
   --color-brand-sage: #d1dcc3;
   --color-brand-cream: #f0ebe4;
   --color-brand-warm: #e8e2da;
-  --color-brand-antique-pink: #e2d0c8;
-  --color-brand-blush: #e2d0c8;
+  --color-brand-antique-pink: #eddcd6;
+  --color-brand-blush: #eddcd6;
   --color-brand-coral: #c08d88;
   --color-brand-light: #f4f7f6;
   --color-brand-navy: #1a2b34;
@@ -69,7 +69,7 @@ img {
 }
 
 .marquee-track {
-  animation: marquee-scroll 45s linear infinite;
+  animation: marquee-scroll 75s linear infinite;
   will-change: transform;
 }
 

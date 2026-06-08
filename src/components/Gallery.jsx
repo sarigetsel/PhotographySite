@@ -90,7 +90,7 @@ export default function Gallery({ showHeader = true }) {
               הגלריה
             </h2>
             <p className="mx-auto mt-4 max-w-lg text-brand-dark/65">
-              {images.length} רגעים שנתפסו באהבה — לחצו על תמונה להגדלה
+              רגעים שנתפסו באהבה — לחצו על תמונה להגדלה
             </p>
           </motion.div>
         )}

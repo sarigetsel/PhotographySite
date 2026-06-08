@@ -50,7 +50,7 @@ export default function GalleryTeaser() {
             הצצה לעבודות
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-brand-dark/70">
-            124 רגעים שנתפסו בטבע, באור טבעי ובאהבה — הגלריה המלאה מחכה לכם בדף נפרד
+            רגעים שנתפסו בטבע, באור טבעי ובאהבה — הגלריה המלאה מחכה לכם בדף נפרד
           </p>
         </motion.div>
 
