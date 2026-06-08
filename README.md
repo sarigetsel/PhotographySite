@@ -24,8 +24,12 @@ The site deploys automatically to GitHub Pages on every push to `main`.
 
 ### GitHub Pages setup
 
-1. Repo **Settings → Pages → Build and deployment → Source:** GitHub Actions
-2. Optional: add `VITE_WEB3FORMS_ACCESS_KEY` under **Settings → Secrets → Actions** for the contact form
+1. Repo **Settings → Pages → Build and deployment**
+2. **Source:** Deploy from a branch
+3. **Branch:** `gh-pages` → folder `/ (root)` → Save
+4. Optional: add `VITE_WEB3FORMS_ACCESS_KEY` under **Settings → Secrets → Actions** for the contact form
+
+Every push to `main` rebuilds the site and updates the `gh-pages` branch automatically.
 
 ## Build
 
