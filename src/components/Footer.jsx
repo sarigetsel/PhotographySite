@@ -23,7 +23,7 @@ export default function Footer() {
 
         <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-white/80">
           <a
-            href={`tel:+${BRAND.whatsapp}`}
+            href={`tel:+${BRAND.phoneRaw}`}
             className="flex items-center gap-2 transition-colors hover:text-brand-coral"
           >
             <Phone size={16} />

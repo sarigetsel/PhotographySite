@@ -8,18 +8,13 @@ const picsLink = join(root, 'public', 'pics')
 
 if (!existsSync(picsSrc)) {
   console.warn('pics/ folder not found — skipping link setup')
-  process.exit(0)
-}
+} else if (!existsSync(picsLink)) {
+  mkdirSync(join(root, 'public'), { recursive: true })
 
-if (existsSync(picsLink)) {
-  process.exit(0)
-}
-
-mkdirSync(join(root, 'public'), { recursive: true })
-
-try {
-  cpSync(picsSrc, picsLink, { recursive: true })
-  console.log('Copied pics/ to public/pics/')
-} catch (err) {
-  console.warn('Could not copy pics to public/pics:', err.message)
+  try {
+    cpSync(picsSrc, picsLink, { recursive: true })
+    console.log('Copied pics/ to public/pics/')
+  } catch (err) {
+    console.warn('Could not copy pics to public/pics:', err.message)
+  }
 }

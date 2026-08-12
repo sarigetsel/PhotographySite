@@ -2,9 +2,6 @@ export const BRAND = {
   email: '0583264049z@gmail.com',
   phone: '053-415-9181',
   phoneRaw: '0534159181',
-  whatsapp: '972534159181',
-  instagram: 'https://instagram.com/rutgetsel',
-  instagramHandle: '@rutgetsel',
 }
 
 export const QUOTE =

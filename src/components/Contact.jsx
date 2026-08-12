@@ -1,24 +1,12 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { CheckCircle, Loader2, Mail, MessageCircle, Phone, Share2 } from 'lucide-react'
+import { CheckCircle, Loader2, Mail, MessageCircle, Phone } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import { BRAND } from '../utils/config'
 
 const WEB3FORMS_ACCESS_KEY = 'c4cb3f93-8340-4068-b56a-2da211721129'
 
 const CONTACT_LINKS = [
-  {
-    icon: MessageCircle,
-    label: 'WhatsApp',
-    href: `https://wa.me/${BRAND.whatsapp}`,
-    sub: BRAND.phone,
-  },
-  {
-    icon: Share2,
-    label: 'Instagram',
-    href: BRAND.instagram,
-    sub: BRAND.instagramHandle,
-  },
   {
     icon: Mail,
     label: 'Email',
@@ -28,7 +16,7 @@ const CONTACT_LINKS = [
   {
     icon: Phone,
     label: 'טלפון',
-    href: `tel:+${BRAND.whatsapp}`,
+    href: `tel:+${BRAND.phoneRaw}`,
     sub: BRAND.phone,
   },
 ]
@@ -99,7 +87,7 @@ export default function Contact() {
             initial={{ opacity: 0, x: -20 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="grid grid-cols-2 gap-4"
+            className="grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2"
           >
             {CONTACT_LINKS.map((item) => (
               <a
@@ -107,13 +95,13 @@ export default function Contact() {
                 href={item.href}
                 target={item.href.startsWith('http') ? '_blank' : undefined}
                 rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="group relative z-20 flex cursor-pointer flex-col items-center rounded-2xl border border-brand-sage bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-brand-coral/40 hover:shadow-lg"
+                className="group relative z-20 flex min-h-[170px] cursor-pointer flex-col items-center justify-center rounded-[1.75rem] border border-brand-sage bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-brand-coral/40 hover:shadow-2xl"
               >
-                <div className="mb-3 rounded-full bg-brand-antique-pink/70 p-3 text-brand-dark transition-colors group-hover:bg-brand-coral group-hover:text-white">
+                <div className="mb-4 rounded-full bg-brand-antique-pink/70 p-4 text-brand-dark transition-colors group-hover:bg-brand-coral group-hover:text-white">
                   <item.icon size={22} strokeWidth={1.5} />
                 </div>
-                <span className="text-sm font-medium text-brand-dark">{item.label}</span>
-                <span className="mt-1 text-xs break-all text-brand-dark/50">{item.sub}</span>
+                <span className="text-base font-semibold text-brand-dark">{item.label}</span>
+                <span className="mt-2 text-sm break-all text-brand-dark/60">{item.sub}</span>
               </a>
             ))}
           </motion.div>
