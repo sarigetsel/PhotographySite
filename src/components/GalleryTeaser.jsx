@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowLeft, Images } from 'lucide-react'
+import { ArrowLeft, Images, Mountain } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getPicPath } from '../utils/images'
 import { useInView } from '../hooks/useInView'
@@ -70,8 +70,9 @@ export default function GalleryTeaser() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex justify-center"
+          className="flex flex-col items-center gap-8"
         >
+          {/* Main Gallery Button */}
           <Link
             to="/gallery"
             className="group inline-flex items-center gap-3 rounded-full bg-brand-dark px-10 py-4 text-sm font-medium tracking-wide text-white shadow-xl transition-all duration-300 hover:bg-brand-coral hover:shadow-brand-coral/30"
@@ -83,6 +84,24 @@ export default function GalleryTeaser() {
               className="transition-transform duration-300 group-hover:-translate-x-1"
             />
           </Link>
+
+          {/* Outdoor Photos Label and Button */}
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-xs font-medium tracking-[0.2em] text-brand-dark/40 uppercase">
+              צילומי חוץ
+            </p>
+            <Link
+              to="/outdoor"
+              className="group inline-flex items-center gap-2 rounded-full border border-brand-dark/20 px-8 py-3 text-xs font-medium tracking-wide text-brand-dark/60 transition-all duration-300 hover:border-brand-coral hover:text-brand-coral"
+            >
+              <Mountain size={16} />
+              טבע וחופש
+              <ArrowLeft
+                size={14}
+                className="transition-transform duration-300 group-hover:-translate-x-1"
+              />
+            </Link>
+          </div>
         </motion.div>
       </div>
     </section>

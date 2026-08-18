@@ -1,4 +1,4 @@
-const PIC_COUNT = 124
+const PIC_COUNT = 174
 const BASE = import.meta.env.BASE_URL
 
 function asset(path) {
@@ -15,6 +15,14 @@ export function getPicPath(index) {
 
 export function getAllPicPaths() {
   return Array.from({ length: PIC_COUNT }, (_, i) => getPicPath(i + 1))
+}
+
+export function getOutdoorPicPath(index) {
+  return asset(`pics/out/out (${index}).jpg`)
+}
+
+export function getAllOutdoorPicPaths() {
+  return Array.from({ length: 145 }, (_, i) => getOutdoorPicPath(i + 1))
 }
 
 export const LOGO_PATH = asset('pics/logo.png')

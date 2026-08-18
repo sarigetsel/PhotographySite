@@ -6,6 +6,7 @@ import CameraCursor from './components/CameraCursor'
 import ScrollProgress, { BackToTop } from './components/ScrollProgress'
 import HomePage from './pages/HomePage'
 import GalleryPage from './pages/GalleryPage'
+import OutdoorGalleryPage from './pages/OutdoorGalleryPage'
 import { useScrollTo } from './hooks/useScrollTo'
 
 function ScrollToTop() {
@@ -38,6 +39,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage onNavigate={scrollTo} />} />
           <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/outdoor" element={<OutdoorGalleryPage />} />
         </Routes>
       </main>
       <Footer />
