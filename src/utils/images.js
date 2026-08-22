@@ -22,7 +22,7 @@ export function getOutdoorPicPath(index) {
 }
 
 export function getAllOutdoorPicPaths() {
-  return Array.from({ length: 145 }, (_, i) => getOutdoorPicPath(i + 1))
+  return Array.from({ length: 155 }, (_, i) => getOutdoorPicPath(i + 1))
 }
 
 export const LOGO_PATH = asset('pics/logo.png')
