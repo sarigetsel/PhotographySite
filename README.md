@@ -2,6 +2,10 @@
 
 A premium single-page landing website for lifestyle, family, and children photography.
 
+
+https://github.com/user-attachments/assets/107c9040-e52f-46ea-9923-13c5a6732ba2
+
+
 ## Stack
 
 - React + Vite
