@@ -1,5 +1,9 @@
-// מקליט סרטון הדגמה של האתר: כל התמונות, הגלריות, ה-lightbox, המחירון וטופס יצירת הקשר.
-// שימוש: npm run dev -- --port 5174 --strictPort  ואז  node scripts/capture-demo.mjs
+// מקליט סרטון הדגמה של האתר במעבר אחד קדימה: פתיחה, אודות, קרוסלה, צילומי חוץ,
+// גלריה מלאה, מחירון וטופס יצירת קשר (בלי שליחה).
+// כדי שהגלילה תהיה חלקה, מריצים שרת dev עם עותקים מוקטנים של אותן תמונות:
+//   DEMO_PUBLIC_DIR=<תיקייה עם pics מוקטנות> npx vite --config vite.demo.config.js --port 5176
+//   DEMO_URL=http://127.0.0.1:5176 node scripts/capture-demo.mjs
+//   node scripts/render-demo.mjs demo.mp4   (עריכה + מוזיקה)
 import { chromium } from 'playwright'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -20,20 +24,6 @@ const context = await browser.newContext({
 })
 const page = await context.newPage()
 
-// אופציונלי: הגשת אותן תמונות בגרסה מוקטנת כדי שההקלטה לא תיתקע בטעינה
-const SMALL = process.env.DEMO_SMALL_DIR
-if (SMALL) {
-  await context.route(/\/pics\/.+\.jpe?g$/i, async (route) => {
-    const rel = decodeURIComponent(new URL(route.request().url()).pathname).replace(/^.*?\/pics\//, '')
-    const file = path.join(SMALL, rel)
-    if (!fs.existsSync(file)) return route.continue()
-    await route.fulfill({
-      status: 200,
-      body: fs.readFileSync(file),
-      headers: { 'content-type': 'image/jpeg', 'cache-control': 'public, max-age=31536000, immutable' },
-    })
-  })
-}
 const t0 = Date.now()
 
 // --- טעינה מוקדמת של כל התמונות (החלק הזה נחתך מהסרטון) ---
@@ -67,9 +57,16 @@ for (let attempt = 0; !process.env.SKIP_PRELOAD && attempt < 4; attempt++) {
     await page.waitForTimeout(1500)
   }
 }
-await page.goto(`${BASE}/`, { waitUntil: 'networkidle' })
+// טוענים נתיב ריק, נותנים לדפדפן להירגע, ואז ניווט פנימי לדף הבית —
+// כך אנימציית הכניסה והחלפות השקופיות נקלטות בדיוק כמו באתר
+await page.goto(`${BASE}/__start`, { waitUntil: 'networkidle' })
 await page.mouse.move(W - 120, H - 80)
-await page.waitForTimeout(400)
+await page.waitForTimeout(2500)
+await page.evaluate(() => {
+  history.pushState({}, '', '/')
+  dispatchEvent(new PopStateEvent('popstate'))
+})
+await page.waitForTimeout(60)
 const trimStart = (Date.now() - t0) / 1000
 console.log(`preload done, trim at ${trimStart.toFixed(2)}s`)
 
@@ -118,17 +115,26 @@ async function scrollToY(target, pxPerSec = 1400, minMs = 500) {
         const dist = to - from
         const dur = Math.max(minMs, (Math.abs(dist) / pxPerSec) * 1000)
         const t0 = performance.now()
+        let done = false
+        const finish = () => {
+          if (done) return
+          done = true
+          resolve()
+        }
         const step = (now) => {
+          if (done) return
           const t = Math.min(1, (now - t0) / dur)
           const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
           window.scrollTo({ top: from + dist * e, behavior: 'instant' })
           if (t < 1) requestAnimationFrame(step)
-          else resolve()
+          else finish()
         }
         requestAnimationFrame(step)
+        // ביטחון: אם requestAnimationFrame נתקע, לא לחכות לנצח
         setTimeout(() => {
+          if (done) return
           window.scrollTo({ top: to, behavior: 'instant' })
-          resolve()
+          finish()
         }, dur + 3000)
       }),
     { target, pxPerSec, minMs },
@@ -204,7 +210,12 @@ async function imagesReady(n = 8) {
   await page.waitForFunction(
     (n) => {
       const imgs = [...document.querySelectorAll('main section .columns-2 img')].slice(0, n)
-      return imgs.length >= Math.min(n, 4) && imgs.every((i) => i.complete && i.naturalWidth > 0)
+      const first = document.querySelector('main section .columns-2 button')
+      return (
+        imgs.length >= Math.min(n, 4) &&
+        imgs.every((i) => i.complete && i.naturalWidth > 0) &&
+        first.getBoundingClientRect().height > 120
+      )
     },
     n,
     { timeout: 120000 },
@@ -224,161 +235,118 @@ async function waitScrollTop() {
 async function typeHuman(text) {
   for (const ch of text) {
     await page.keyboard.type(ch)
-    await wait(45 + Math.random() * 45)
+    await wait(30 + Math.random() * 35)
   }
 }
 
 try {
-// ================= דף הבית =================
-log('================= דף הבית =================')
-await moveTo(W / 2 + 60, H / 2 + 40, 900)
-await wait(1200)
-
-// מעבר בין שקופיות ה-Hero בעזרת הנקודות
-log('מעבר בין שקופיות ה-Hero בעזרת הנקודות')
-const dots = page.locator('button[aria-label^="שקף"]')
-for (const i of [2, 4, 6, 8]) {
-  await clickOn(dots.nth(i), 450)
-  await wait(650)
-}
-
-// ריחוף על כפתורי ה-Hero
-log('ריחוף על כפתורי ה-Hero')
-await hoverOn(page.getByRole('button', { name: 'הזמינו סשן' }), 600, 500)
-await hoverOn(page.locator('#home a[href$="/gallery"]'), 500, 600)
-await moveTo(W / 2, H / 2 + 120, 500)
-
-// גלילה לאורך הציטוט, אודות, תהליך העבודה
-log('גלילה לאורך הציטוט, אודות, תהליך העבודה')
-await scrollToSel('#about', 80, 1300)
-await wait(1200)
-await scrollBy(H * 1.6, 1300)
-await wait(900)
-
-// הקרוסלה של התמונות
-log('הקרוסלה של התמונות')
-await scrollToSel('.marquee-track', 200, 1300)
-await moveTo(W / 2 - 200, H / 2 - 60, 700)
-await wait(2600)
-
-// ריחוף על כפתורי הגלריות
-log('ריחוף על כפתורי הגלריות')
-const galleryBtn = page.getByRole('link', { name: 'לגלריה המלאה' })
-const outdoorBtn = page.getByRole('link', { name: /טבע וחופש/ })
-await hoverOn(galleryBtn, 600, 500)
-await hoverOn(outdoorBtn, 500, 600)
-
-// מחירון: הגדלה, סגירה, הורדה
-log('מחירון: הגדלה, סגירה, הורדה')
-const priceBtn = page.locator('#pricing button').first()
-await scrollToSel('#pricing button', 110, 1300)
-await wait(700)
-await hoverOn(priceBtn, 600, 700)
-await clickOn(priceBtn, 300)
-await wait(1800)
-await clickOn(page.locator('button[aria-label="סגור"]').last(), 700)
-await wait(700)
-await scrollBy(260, 900)
-await clickOn(page.getByRole('button', { name: 'הורדת מחירון' }), 700)
-await wait(900)
-
-// "שאלו אותי" -> גולל לצור קשר
-log('"שאלו אותי" -> גולל לצור קשר')
-await clickOn(page.getByRole('button', { name: 'שאלו אותי' }), 600)
-await wait(1500)
-
-// מילוי הטופס (בלי שליחה)
-log('מילוי הטופס (בלי שליחה)')
-await clickOn(page.locator('#name'), 700)
-await typeHuman('מיכל לוי')
-await clickOn(page.locator('#email'), 600)
-await typeHuman('michal@example.com')
-await clickOn(page.locator('#phone'), 500)
-await typeHuman('050-1234567')
-await clickOn(page.locator('#message'), 600)
-await typeHuman('היי, אשמח לפרטים על סשן משפחתי')
-await wait(500)
-await hoverOn(page.locator('form button[type="submit"]'), 600, 700)
-
-// פרטי קשר והפוטר
-log('פרטי קשר והפוטר')
-await hoverOn(page.locator('#contact a').first(), 700, 500)
-await scrollToBottom(1300)
-await wait(800)
-
-// כפתור חזרה למעלה
-log('כפתור חזרה למעלה')
-const backTop = page.locator('button[aria-label="חזרה למעלה"]')
-await clickOn(backTop, 800)
-await waitScrollTop()
-await wait(500)
-
-// ================= הגלריה המלאה =================
-log('================= הגלריה המלאה =================')
-await clickOn(page.getByRole('button', { name: 'גלריה', exact: true }), 800)
-await page.waitForURL('**/gallery', { waitUntil: 'commit' })
-await imagesReady()
-
-// פתיחת תמונה וניווט ב-lightbox
-log('פתיחת תמונה וניווט ב-lightbox')
-await clickOn(page.locator('#gallery button').first(), 700)
-await wait(900)
 const next = page.locator('button[aria-label="תמונה הבאה"]')
-for (let i = 0; i < 3; i++) {
-  await clickOn(next, i === 0 ? 600 : 200)
-  await wait(500)
-}
-await page.keyboard.press('ArrowRight')
-await wait(450)
-await page.keyboard.press('ArrowRight')
-await wait(450)
-await clickOn(page.locator('button[aria-label="תמונה קודמת"]'), 700)
-await wait(500)
-await page.keyboard.press('Escape')
-await wait(600)
+const navBtn = (name) => page.locator('header').getByRole('button', { name, exact: true })
 
-// גלילה מהירה על כל 174 התמונות
-log('גלילה מהירה על כל 174 התמונות')
-await moveTo(W / 2 + 200, H / 2, 500)
-await fast(3.2, () => scrollToBottom(700))
-await wait(600)
+log('דף הבית — פתיחה, השקופיות מתחלפות לבד')
+await wait(1800)
+await hoverOn(page.getByRole('button', { name: 'הזמינו סשן' }), 1200, 1600)
+await hoverOn(page.locator('#home a[href$="/gallery"]'), 700, 2600)
+await moveTo(W / 2 + 180, H / 2 + 60, 700)
 
-// ================= צילומי חוץ =================
-log('================= צילומי חוץ =================')
-await clickOn(backTop, 700)
-await waitScrollTop()
-await clickOn(page.locator('main a', { hasText: 'חזרה לדף הבית' }), 800)
-await page.waitForURL(`${BASE}/`, { waitUntil: 'commit' })
-await wait(700)
-await fast(2, () => scrollToSel('.marquee-track', 200, 1600))
-await clickOn(page.getByRole('link', { name: /טבע וחופש/ }), 700)
+log('גלילה: ציטוט, אודות, תהליך')
+await scrollToSel('#about', 80, 1100)
+await wait(1300)
+await scrollBy(H * 1.5, 1100)
+await wait(1100)
+
+log('קרוסלת התמונות')
+await scrollToSel('.marquee-track', 220, 1100)
+await moveTo(W / 2 - 160, H / 2 - 70, 700)
+await wait(2200)
+await hoverOn(page.getByRole('link', { name: 'לגלריה המלאה' }), 600, 600)
+
+log('צילומי חוץ')
+await clickOn(page.getByRole('link', { name: /טבע וחופש/ }), 500)
 await page.waitForURL('**/outdoor', { waitUntil: 'commit' })
-await imagesReady()
-
+await fast(3, async () => {
+  await wait(400)
+  await imagesReady()
+})
 await clickOn(page.locator('main section button').first(), 700)
+await wait(1100)
+await clickOn(next, 600)
+await wait(800)
+await page.keyboard.press('ArrowRight')
 await wait(900)
-for (let i = 0; i < 3; i++) {
-  await clickOn(next, i === 0 ? 600 : 200)
-  await wait(500)
-}
 await page.keyboard.press('Escape')
-await wait(600)
+await wait(500)
+await moveTo(W / 2 - 200, H / 2, 400)
+await fast(5, () => scrollToBottom(700))
+await wait(300)
 
-await moveTo(W / 2 - 200, H / 2, 500)
-await fast(3.2, () => scrollToBottom(700))
-await wait(600)
+log('הגלריה המלאה דרך התפריט')
+await clickOn(navBtn('גלריה'), 700)
+await page.waitForURL('**/gallery', { waitUntil: 'commit' })
+await fast(3, async () => {
+  await wait(400)
+  await imagesReady()
+})
+await clickOn(page.locator('#gallery button').first(), 700)
+await wait(1100)
+await clickOn(next, 600)
+await wait(800)
+await clickOn(page.locator('button[aria-label="תמונה קודמת"]'), 500)
+await wait(800)
+await clickOn(page.locator('button[aria-label="סגור"]'), 600)
+await wait(500)
+await moveTo(W / 2 + 200, H / 2, 400)
+await fast(5, () => scrollToBottom(700))
+await wait(300)
 
-// ================= סיום: חזרה לבית דרך הלוגו =================
-log('================= סיום: חזרה לבית דרך הלוגו =================')
-await clickOn(page.locator('header a[aria-label="חזרה לדף הבית"]'), 900)
+log('מחירון דרך התפריט')
+const atPricing = () =>
+  page.waitForFunction(() => {
+    const r = document.querySelector('#pricing')?.getBoundingClientRect()
+    return r && Math.abs(r.top) < 40
+  }, null, { timeout: 2500 }).then(() => true, () => false)
+await clickOn(navBtn('מחירון'), 700)
 await page.waitForURL(`${BASE}/`, { waitUntil: 'commit' })
-await wait(900)
-if ((await scrollY()) > 10) {
-  await clickOn(backTop, 800)
-  await waitScrollTop()
+// מחכים שהגלילה של האתר תיגמר
+await page.waitForFunction(() => new Promise((r) => {
+  const y = scrollY
+  setTimeout(() => r(Math.abs(scrollY - y) < 1), 350)
+}), null, { timeout: 8000 }).catch(() => {})
+if (!(await atPricing())) {
+  // כמו משתמש: לוחצים שוב על "מחירון" בתפריט
+  await clickOn(navBtn('מחירון'), 300)
+  await atPricing()
 }
-await moveTo(W / 2, H / 2 + 40, 900)
-await wait(2500)
+await wait(400)
+const priceBtn = page.locator('#pricing button').first()
+await hoverOn(priceBtn, 600, 600)
+await clickOn(priceBtn, 200)
+await wait(1700)
+await clickOn(page.locator('button[aria-label="סגור"]').last(), 600)
+await wait(500)
+await clickOn(page.getByRole('button', { name: 'הורדת מחירון' }), 600)
+await wait(500)
+
+log('שאלו אותי -> טופס')
+await clickOn(page.getByRole('button', { name: 'שאלו אותי' }), 500)
+await wait(1300)
+await fast(1.6, async () => {
+  await clickOn(page.locator('#name'), 600)
+  await typeHuman('מיכל לוי')
+  await clickOn(page.locator('#email'), 450)
+  await typeHuman('michal@example.com')
+  await clickOn(page.locator('#phone'), 400)
+  await typeHuman('050-1234567')
+  await clickOn(page.locator('#message'), 450)
+  await typeHuman('אשמח לפרטים על סשן משפחתי')
+})
+await hoverOn(page.locator('form button[type="submit"]'), 500, 700)
+
+log('פרטי קשר ופוטר')
+await hoverOn(page.locator('#contact a').first(), 600, 600)
+await scrollToBottom(900)
+await moveTo(W / 2, H - 150, 800)
+await wait(2200)
 
 } catch (e) {
   await page.screenshot({ path: `${OUT_DIR}/error.png` })

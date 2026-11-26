@@ -26,14 +26,19 @@ const parts = pieces.map(
 const concat = `${pieces.map((_, i) => `[v${i}]`).join('')}concat=n=${pieces.length}:v=1:a=0,` +
   `fade=t=in:st=0:d=0.6,fade=t=out:st=${(outDur - 0.8).toFixed(2)}:d=0.8,format=yuv420p[out]`
 
+// פסקול (פסנתר + ציפורים) נוצר באורך המדויק של הסרטון
+const MUSIC = 'demo-raw/music.wav'
+execFileSync('python', ['scripts/make-music.py', outDur.toFixed(2), MUSIC], { stdio: 'inherit' })
+
 execFileSync(
   'ffmpeg',
   [
-    '-y', '-v', 'error', '-i', meta.raw,
+    '-y', '-v', 'error', '-i', meta.raw, '-i', MUSIC,
     '-filter_complex', [...parts, concat].join(';'),
-    '-map', '[out]',
+    '-map', '[out]', '-map', '1:a',
     '-c:v', 'libx264', '-preset', 'slow', '-crf', '30',
-    '-movflags', '+faststart',
+    '-c:a', 'aac', '-b:a', '112k',
+    '-shortest', '-movflags', '+faststart',
     out,
   ],
   { stdio: 'inherit' },
